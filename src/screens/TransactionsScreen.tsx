@@ -130,12 +130,14 @@ const TransactionsScreen = () => {
     setModalVisible(true);
   };
 
-  const renderTransactionItem = ({ item }: { item: Transaction }) => {
-    console.log('VVVV', item)
-    const account = getAccountDetails(item.account || "");
-    const category = categories.find(cat => cat.id === item.category);
-    
-    return (
+
+// Modify the renderTransactionItem function to include a delete button
+const renderTransactionItem = ({ item }: { item: Transaction }) => {
+  const account = getAccountDetails(item.account || "");
+  const category = categories.find(cat => cat.id === item.category);
+  
+  return (
+    <View style={styles.transactionContainer}>
       <TouchableOpacity 
         onPress={() => handleEdit(item)} 
         style={styles.transactionItem}
@@ -155,8 +157,15 @@ const TransactionsScreen = () => {
           Category: {category?.name || "Uncategorized"}
         </Text>
       </TouchableOpacity>
-    );
-  };
+      <TouchableOpacity 
+        style={styles.deleteButton}
+        onPress={() => handleDelete(item.id)}
+      >
+        <Text style={styles.deleteButtonText}>×</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
   const renderTransactionForm = () => (
     <ScrollView style={styles.formScrollView}>
@@ -270,6 +279,31 @@ const TransactionsScreen = () => {
     </ScrollView>
   );
 
+  const handleDelete = (transactionId?: string) => {
+
+    if(!transactionId) {return;}
+    
+    Alert.alert(
+      "Delete Transaction",
+      "Are you sure you want to delete this transaction?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            const updatedTransactions = transactions.filter(t => t.id !== transactionId);
+            setTransactions(updatedTransactions);
+            await saveTransactions(updatedTransactions);
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Button title="Add New Transaction" onPress={handleAddTransaction} />
@@ -321,15 +355,15 @@ const styles = StyleSheet.create({
   list: {
     marginTop: 20,
   },
-  transactionItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    backgroundColor: '#FFFFFF',
-    marginBottom: 8,
-    borderRadius: 8,
-    elevation: 2,
-  },
+  // transactionItem: {
+  //   padding: 15,
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: '#E0E0E0',
+  //   backgroundColor: '#FFFFFF',
+  //   marginBottom: 8,
+  //   borderRadius: 8,
+  //   elevation: 2,
+  // },
   transactionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -409,6 +443,35 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#EEE',
     backgroundColor: '#FFF',
+  },
+  transactionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  transactionItem: {
+    flex: 1,
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    elevation: 2,
+  },
+  deleteButton: {
+    backgroundColor: '#ff4444',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+    elevation: 2,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
 });
 

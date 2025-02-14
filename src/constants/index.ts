@@ -1,6 +1,6 @@
 export const STORAGE_KEYS = {
     TRANSACTIONS: '@transactions',
-    MESSAGES: '@messages',
+    MESSAGES: 'messages',
     CATEGORIES: '@categories',
     ACCOUNTS: '@accounts'
 }
