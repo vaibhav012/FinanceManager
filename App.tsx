@@ -1,17 +1,20 @@
-// App.tsx
+import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MessageProvider, useMessages } from './src/context/MessageContext';
 import { usePermissionsSetup } from './src/hooks/usePermissionsSetup';
-import { screens } from './src/screens/index';
-import type { RootTabParamList } from './src/types/navigation';
+import { screens } from './src/screens';
 import TabBarIcon from './tab-bar-icon';
+import ImportExportScreen from './src/screens/import-export/import-export-screen';
+import type { RootDrawerParamList, RootTabParamList } from './src/types/navigation';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
-const AppContent = () => {
+const TabNavigator = () => {
   const { addMessage } = useMessages();
   usePermissionsSetup(addMessage);
 
@@ -41,7 +44,32 @@ const App = () => (
   <SafeAreaProvider>
     <MessageProvider>
       <NavigationContainer>
-        <AppContent />
+        <Drawer.Navigator
+          screenOptions={{
+            drawerType: 'front',
+            drawerStyle: {
+              backgroundColor: '#fff',
+              width: '75%',
+            },
+          }}
+        >
+          <Drawer.Screen
+            name="MainTabs"
+            component={TabNavigator}
+            options={{
+              title: 'Home',
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="ImportExport"
+            component={ImportExportScreen}
+            options={{
+              title: 'Import/Export Data',
+              headerShown: true,
+            }}
+          />
+        </Drawer.Navigator>
       </NavigationContainer>
     </MessageProvider>
   </SafeAreaProvider>

@@ -1,6 +1,9 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-// src/types/navigation.ts
+export type RootDrawerParamList = {
+  MainTabs: undefined;
+  ImportExport: undefined;
+};
+
 export type RootTabParamList = {
   Home: undefined;
   Categories: undefined;
@@ -8,4 +11,3 @@ export type RootTabParamList = {
   Transactions: undefined;
 };
 
-export const Tab = createBottomTabNavigator<RootTabParamList>();
