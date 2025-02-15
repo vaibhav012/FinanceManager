@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {Account, Message, Transaction} from '../types';
 
 export const compileMessages = (
@@ -16,8 +18,6 @@ export const compileMessages = (
       return; // Skip if no matching account found
     }
 
-    console.log('VVVV', message, matchingAccount);
-
     // Try each regex pattern for the account until we find a match
     let extractedData: Transaction | null = null;
     for (const pattern of matchingAccount.messageRegex) {
@@ -27,19 +27,28 @@ export const compileMessages = (
         const match = message.body.match(regex);
 
         if (match) {
+          const groups = match?.groups ?? {};
+
+          // TODO: Handle this properly - will break in year 2100
+          if(groups.year?.length === 2){
+            groups.year = '20' + groups.year;
+          }
+
           extractedData = {
+            id: generateTransactionId(),
+            messageId: message.id,
+            createdAt: new Date().toISOString(),
             account: matchingAccount.id,
-            id: Date.now().toString(),
-            amount: Number.parseFloat(match[2]),
-            date: match[3],
-            time: match[4],
+            amount: Number.parseFloat(groups.amount),
+            date: `${groups.year}-${groups.month}-${groups.day}`,
+            time: `${groups.hour}:${groups.minute}:${groups.second}`,
             type: 'debit',
-            purpose: match[5],
-            category: '',
+            purpose: groups.merchant,
+            category: 'Others',
           };
         }
 
-        console.log('VVVV', message.body, pattern, regex, extractedData);
+        console.log('VVVV', message.body, regex, extractedData);
       } catch (error) {
         console.error(`Invalid regex pattern: ${pattern}`, error);
       }
@@ -49,33 +58,21 @@ export const compileMessages = (
       return; // Skip if no pattern matched
     }
 
-    // Create transaction if we have at least amount and type
-    if (extractedData.amount != null && extractedData.type != null) {
-      const transaction: Transaction = {
-        id: generateTransactionId(),
-        account: matchingAccount.id,
-        amount: extractedData.amount,
-        type: extractedData.type,
-        date: extractedData.date || new Date(message.timestamp),
-        time: extractedData.time || formatTime(message.timestamp),
-        purpose: extractedData.purpose || 'Unknown',
-        category: extractedData.category || 'Others',
-        messageId: message.id,
-        createdAt: new Date(),
-      };
-
-      transactions.push(transaction);
-    }
+    transactions.push(extractedData);
   });
 
   return transactions;
 };
+
 
 const extractDataFromMessage = (
   messageBody: string,
   pattern: string,
 ): Transaction => {
   const data: Transaction = {
+    id: null,
+    messageId: null,
+    createdAt: null,
     amount: null,
     account: null,
     date: null,
@@ -103,7 +100,7 @@ const extractDataFromMessage = (
   // Extract date
   const dateMatch = messageBody.match(patterns.date);
   if (dateMatch) {
-    data.date = parseDate(dateMatch[1]);
+    data.date = dateMatch[1];
   }
 
   // Extract time

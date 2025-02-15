@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {
-  View, 
-  Text, 
-  FlatList, 
-  StyleSheet, 
-  Pressable, 
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Pressable,
   Clipboard,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {useMessages} from '../context/MessageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,44 +23,44 @@ const HomeScreen = () => {
     try {
       await Clipboard.setString(text);
       Alert.alert(
-        "Success",
-        "Message copied to clipboard",
-        [{ text: "OK" }]
+        'Success',
+        'Message copied to clipboard',
+        [{ text: 'OK' }]
       );
     } catch (error) {
       Alert.alert(
-        "Error",
-        "Failed to copy message",
-        [{ text: "OK" }]
+        'Error',
+        'Failed to copy message',
+        [{ text: 'OK' }]
       );
     }
   };
 
   const handleDelete = (messageId: string) => {
     Alert.alert(
-      "Delete Message",
-      "Are you sure you want to delete this message?",
+      'Delete Message',
+      'Are you sure you want to delete this message?',
       [
         {
-          text: "Cancel",
-          style: "cancel"
+          text: 'Cancel',
+          style: 'cancel',
         },
         {
-          text: "Delete",
+          text: 'Delete',
           onPress: () => deleteMessage(messageId),
-          style: "destructive"
-        }
+          style: 'destructive',
+        },
       ]
     );
   };
 
   const renderItem = ({item}: {item: Message}) => (
     <View style={styles.messageWrapper}>
-      <Pressable 
+      <Pressable
         onLongPress={() => copyToClipboard(item.body)}
         style={({pressed}) => [
           styles.messageCard,
-          pressed && styles.messageCardPressed
+          pressed && styles.messageCardPressed,
         ]}
       >
         <Text style={styles.sender}>{item.sender}</Text>
@@ -69,7 +69,7 @@ const HomeScreen = () => {
           {new Date(item.timestamp).toLocaleDateString()}
         </Text>
       </Pressable>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => handleDelete(item.id)}
       >
@@ -78,7 +78,7 @@ const HomeScreen = () => {
     </View>
   );
 
-  const compileMessagesNow = async () => {
+  const compileMessagesNow = () => async () => {
     const storedAccounts = await AsyncStorage.getItem(STORAGE_KEYS.ACCOUNTS);
     const compiledTransactions = compileMessages(
       messages,
@@ -94,6 +94,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     compileMessagesNow();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   return (

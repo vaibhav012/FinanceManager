@@ -1,6 +1,6 @@
 // src/services/ForegroundService.ts
-import notifee, { 
-  AndroidImportance, 
+import notifee, {
+  AndroidImportance,
 } from '@notifee/react-native';
 import { Message } from '../types';
 import SMSService from './SMSService';
@@ -14,11 +14,11 @@ export const startForegroundService = async (addMessage: (message: Message) => v
     name: 'SMS Monitor',
     lights: false,
     vibration: false,
-    importance: AndroidImportance.LOW
+    importance: AndroidImportance.LOW,
   });
 
   // Register the foreground service with the notification
-  notifee.registerForegroundService((notification) => {
+  notifee.registerForegroundService(() => {
     return new Promise(() => {
       // Start SMS listening service
       SMSService.start((event) => {
@@ -29,7 +29,7 @@ export const startForegroundService = async (addMessage: (message: Message) => v
           timestamp: event.timestamp,
         };
 
-        console.log('New Message', newMessage)
+        console.log('New Message', newMessage);
         addMessage(newMessage);
         // showMessageNotification(newMessage);
       });
@@ -48,34 +48,34 @@ export const startForegroundService = async (addMessage: (message: Message) => v
       smallIcon: 'ic_notification',
       pressAction: {
         id: 'default',
-      }
-    },
-  });
-};
-
-const showMessageNotification = async (message: Message) => {
-  const channelId = await notifee.createChannel({
-    id: 'new_message',
-    name: 'New Messages',
-    importance: AndroidImportance.HIGH,
-  });
-
-  await notifee.displayNotification({
-    title: `New message from ${message.sender}`,
-    body: message.body,
-    android: {
-      channelId,
-      pressAction: {
-        id: 'default',
       },
     },
   });
 };
 
+// const showMessageNotification = async (message: Message) => {
+//   const channelId = await notifee.createChannel({
+//     id: 'new_message',
+//     name: 'New Messages',
+//     importance: AndroidImportance.HIGH,
+//   });
+
+//   await notifee.displayNotification({
+//     title: `New message from ${message.sender}`,
+//     body: message.body,
+//     android: {
+//       channelId,
+//       pressAction: {
+//         id: 'default',
+//       },
+//     },
+//   });
+// };
+
 export const stopForegroundService = async () => {
   // Stop the SMS service
   SMSService.stop();
-  
+
   // Stop the foreground service
   await notifee.stopForegroundService();
 };

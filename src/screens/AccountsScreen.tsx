@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Account, AccountType } from '../types';
 import { STORAGE_KEYS } from '../constants';
+import ListEmptyComponent from './list-empty-state';
 
 
 const AccountScreen: React.FC = () => {
@@ -19,7 +20,7 @@ const AccountScreen: React.FC = () => {
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Form state
   const [senderID, setSenderID] = useState('');
   const [accountNumberEndsWith, setAccountNumberEndsWith] = useState('');
@@ -82,7 +83,7 @@ const AccountScreen: React.FC = () => {
 
     let updatedAccounts: Account[];
     if (editingAccount) {
-      updatedAccounts = accounts.map(acc => 
+      updatedAccounts = accounts.map(acc =>
         acc.id === editingAccount.id ? newAccount : acc
       );
     } else {
@@ -136,13 +137,13 @@ const AccountScreen: React.FC = () => {
         <Text>Regex patterns: {item.messageRegex.join(', ')}</Text>
       </View>
       <View style={styles.accountActions}>
-        <TouchableOpacity 
-          style={[styles.button, styles.editButton]} 
+        <TouchableOpacity
+          style={[styles.button, styles.editButton]}
           onPress={() => handleEdit(item)}
         >
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.button, styles.deleteButton]}
           onPress={() => handleDelete(item.id)}
         >
@@ -157,14 +158,14 @@ const AccountScreen: React.FC = () => {
       <Text style={styles.title}>
         {editingAccount ? 'Edit Account' : 'Add New Account'}
       </Text>
-      
+
       <TextInput
         style={styles.input}
         placeholder="Sender ID"
         value={senderID}
         onChangeText={setSenderID}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Account Number Ends With"
@@ -172,7 +173,7 @@ const AccountScreen: React.FC = () => {
         onChangeText={setAccountNumberEndsWith}
         keyboardType="numeric"
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Message Regex (comma-separated)"
@@ -180,14 +181,14 @@ const AccountScreen: React.FC = () => {
         onChangeText={setMessageRegex}
         multiline
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Bank Name"
         value={bankName}
         onChangeText={setBankName}
       />
-      
+
       <View style={styles.pickerContainer}>
         <Text>Account Type:</Text>
         {(['Savings', 'Credit Card', 'Loan'] as AccountType[]).map((type) => (
@@ -210,17 +211,17 @@ const AccountScreen: React.FC = () => {
       </View>
 
       <View style={styles.formActions}>
-        <TouchableOpacity 
-          style={[styles.button, styles.submitButton]} 
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton]}
           onPress={handleSubmit}
         >
           <Text style={styles.buttonText}>
             {editingAccount ? 'Update' : 'Add'} Account
           </Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.button, styles.cancelButton]} 
+
+        <TouchableOpacity
+          style={[styles.button, styles.cancelButton]}
           onPress={clearForm}
         >
           <Text style={styles.buttonText}>Cancel</Text>
@@ -242,7 +243,7 @@ const AccountScreen: React.FC = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Accounts</Text>
         {!showForm && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.button, styles.addButton]}
             onPress={() => setShowForm(true)}
           >
@@ -258,9 +259,7 @@ const AccountScreen: React.FC = () => {
         renderItem={renderAccountItem}
         keyExtractor={item => item.id}
         style={styles.list}
-        ListEmptyComponent={() => (
-          <Text style={styles.emptyText}>No accounts added yet</Text>
-        )}
+        ListEmptyComponent={ListEmptyComponent}
       />
     </View>
   );

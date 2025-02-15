@@ -17,7 +17,7 @@ class SMSService {
 
     // Listen for SMS events
     const listener = this.eventEmitter.addListener('sms_received', (event) => {
-      console.log('SMS Received Listener')
+      console.log('SMS Received Listener');
       onMessageReceived(event);
     });
 

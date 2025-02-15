@@ -1,5 +1,3 @@
-// utils/transactionUtils.ts
-
 import {Transaction} from '../types';
 
 export const isDuplicateTransaction = (
@@ -52,11 +50,12 @@ export const updateTransactionSafely = (
   const newTransactions = [...existingTransactions];
 
   updatedTransactions.forEach(updatedTransaction => {
-    // If it's a new transaction, check for duplicates
-    if (!isDuplicateTransaction(updatedTransaction, existingTransactions)) {
-      newTransactions.push(updatedTransaction);
-      //   throw new Error('Duplicate transaction detected');
+    if(isDuplicateTransaction(updatedTransaction, existingTransactions)){
+      // TODO: Update previously added transaction
+      return;
     }
+
+    newTransactions.push(updatedTransaction);
   });
 
   return newTransactions;

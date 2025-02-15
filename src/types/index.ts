@@ -21,6 +21,9 @@ export type Transaction = {
   type: 'credit' | 'debit' | null;
   purpose: string | null;
   category: string | null;
+  messageId: string | null;
+  createdAt: string | null
+  remarks?: string;
 };
 
 export type AccountType = 'Savings' | 'Credit Card' | 'Loan';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,43 +10,48 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useMessages } from '../context/MessageContext';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Category } from '../types';
-import { STORAGE_KEYS } from '../constants';
-
-
+import {Category} from '../types';
+import {STORAGE_KEYS} from '../constants';
+import TransactionsCount from './transactions-count';
 
 const DEFAULT_CATEGORIES: Category[] = [
-  { id: '1', name: 'Bills', icon: 'receipt', color: '#FF6B6B' },
-  { id: '2', name: 'Shopping', icon: 'cart', color: '#4ECDC4' },
-  { id: '3', name: 'Transfer', icon: 'bank-transfer', color: '#45B7D1' },
-  { id: '4', name: 'Food', icon: 'food', color: '#96CEB4' },
-  { id: '5', name: 'Others', icon: 'dots-horizontal', color: '#FFEEAD' },
+  {id: '1', name: 'Bills', icon: 'receipt', color: '#FF6B6B'},
+  {id: '2', name: 'Shopping', icon: 'cart', color: '#4ECDC4'},
+  {id: '3', name: 'Transfer', icon: 'bank-transfer', color: '#45B7D1'},
+  {id: '4', name: 'Food', icon: 'food', color: '#96CEB4'},
+  {id: '5', name: 'Others', icon: 'dots-horizontal', color: '#FFEEAD'},
 ];
 
 const AVAILABLE_ICONS = [
-  'receipt', 'cart', 'bank-transfer', 'food', 'dots-horizontal',
-  'cash', 'credit-card', 'gift', 'car', 'home', 'train',
-  'airplane', 'medical-bag', 'school', 'phone'
+  'receipt',
+  'cart',
+  'bank-transfer',
+  'food',
+  'dots-horizontal',
+  'cash',
+  'credit-card',
+  'gift',
+  'car',
+  'home',
+  'train',
+  'airplane',
+  'medical-bag',
+  'school',
+  'phone',
 ];
 
 const CategoriesScreen = () => {
-  const { messages } = useMessages();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  
+
   // Form state
   const [name, setName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('receipt');
   const [color, setColor] = useState('#FF6B6B');
-
-  useEffect(() => {
-    loadCategories();
-  }, []);
 
   const loadCategories = async () => {
     try {
@@ -73,10 +78,6 @@ const CategoriesScreen = () => {
     }
   };
 
-  const getMessageCountByCategory = (category: string) => {
-    return 0;
-    // return messages.filter(msg => msg.category === category).length;
-  };
 
   const handleAddCategory = () => {
     setEditingCategory(null);
@@ -94,23 +95,20 @@ const CategoriesScreen = () => {
     setModalVisible(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDeleteCategory = (category: Category) => {
-    Alert.alert(
-      'Delete Category',
-      'Are you sure you want to delete this category?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            const updatedCategories = categories.filter(c => c.id !== category.id);
-            setCategories(updatedCategories);
-            await saveCategories(updatedCategories);
-          },
+    Alert.alert('Delete Category', 'Are you sure you want to delete this category?', [
+      {text: 'Cancel', style: 'cancel'},
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          const updatedCategories = categories.filter(c => c.id !== category.id);
+          setCategories(updatedCategories);
+          await saveCategories(updatedCategories);
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleSubmit = async () => {
@@ -128,9 +126,7 @@ const CategoriesScreen = () => {
 
     let updatedCategories: Category[];
     if (editingCategory) {
-      updatedCategories = categories.map(cat =>
-        cat.id === editingCategory.id ? newCategory : cat
-      );
+      updatedCategories = categories.map(cat => (cat.id === editingCategory.id ? newCategory : cat));
     } else {
       updatedCategories = [...categories, newCategory];
     }
@@ -140,25 +136,17 @@ const CategoriesScreen = () => {
     setModalVisible(false);
   };
 
-  const renderCategoryItem = ({ item }: { item: Category }) => (
-    <TouchableOpacity 
-      style={styles.categoryCard}
-      onLongPress={() => handleEditCategory(item)}
-    >
-      <View style={[styles.iconContainer, { backgroundColor: item.color }]}>
+  const renderCategoryItem = ({item}: {item: Category}) => (
+    <TouchableOpacity style={styles.categoryCard} onLongPress={() => handleEditCategory(item)}>
+      <View style={[styles.iconContainer, {backgroundColor: item.color}]}>
         <Icon name={item.icon} size={30} color="white" />
       </View>
       <Text style={styles.categoryName}>{item.name}</Text>
-      <Text style={styles.messageCount}>
-        {getMessageCountByCategory(item.name)} messages
-      </Text>
-      <TouchableOpacity 
-        style={styles.editButton}
-        onPress={() => handleEditCategory(item)}
-      >
+      <Text style={styles.messageCount}><TransactionsCount name={item.name}/></Text>
+      <TouchableOpacity style={styles.editButton} onPress={() => handleEditCategory(item)}>
         <Icon name="lead-pencil" size={20} color="#666" />
       </TouchableOpacity>
-      {/* <TouchableOpacity 
+      {/* <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => handleDeleteCategory(item)}
       >
@@ -166,6 +154,11 @@ const CategoriesScreen = () => {
       </TouchableOpacity> */}
     </TouchableOpacity>
   );
+
+  useEffect(() => {
+    loadCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return (
@@ -177,10 +170,7 @@ const CategoriesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.addButton}
-        onPress={handleAddCategory}
-      >
+      <TouchableOpacity style={styles.addButton} onPress={handleAddCategory}>
         <Icon name="plus" size={24} color="white" />
         <Text style={styles.addButtonText}>Add Category</Text>
       </TouchableOpacity>
@@ -197,34 +187,22 @@ const CategoriesScreen = () => {
         visible={modalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {editingCategory ? 'Edit Category' : 'Add Category'}
-            </Text>
+            <Text style={styles.modalTitle}>{editingCategory ? 'Edit Category' : 'Add Category'}</Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Category Name"
-              value={name}
-              onChangeText={setName}
-            />
+            <TextInput style={styles.input} placeholder="Category Name" value={name} onChangeText={setName} />
 
             <Text style={styles.label}>Select Icon</Text>
             <FlatList
               data={AVAILABLE_ICONS}
               horizontal
               showsHorizontalScrollIndicator={false}
-              renderItem={({ item: icon }) => (
+              renderItem={({item: icon}) => (
                 <TouchableOpacity
-                  style={[
-                    styles.iconOption,
-                    selectedIcon === icon && styles.selectedIcon,
-                  ]}
-                  onPress={() => setSelectedIcon(icon)}
-                >
+                  style={[styles.iconOption, selectedIcon === icon && styles.selectedIcon]}
+                  onPress={() => setSelectedIcon(icon)}>
                   <Icon name={icon} size={24} color={selectedIcon === icon ? 'white' : '#666'} />
                 </TouchableOpacity>
               )}
@@ -233,12 +211,12 @@ const CategoriesScreen = () => {
 
             <Text style={styles.label}>Select Color</Text>
             <View style={styles.colorContainer}>
-              {['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'].map((colorOption) => (
+              {['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'].map(colorOption => (
                 <TouchableOpacity
                   key={colorOption}
                   style={[
                     styles.colorOption,
-                    { backgroundColor: colorOption },
+                    {backgroundColor: colorOption},
                     color === colorOption && styles.selectedColor,
                   ]}
                   onPress={() => setColor(colorOption)}
@@ -247,16 +225,10 @@ const CategoriesScreen = () => {
             </View>
 
             <View style={styles.modalActions}>
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
-                onPress={() => setModalVisible(false)}
-              >
+              <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={() => setModalVisible(false)}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.saveButton]}
-                onPress={handleSubmit}
-              >
+              <TouchableOpacity style={[styles.button, styles.saveButton]} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Save</Text>
               </TouchableOpacity>
             </View>
@@ -288,7 +260,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     alignItems: 'center',

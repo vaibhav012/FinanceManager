@@ -33,7 +33,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const currentMessages = await AsyncStorage.getItem('messages');
       const updatedMessages = JSON.parse(currentMessages || '[]');
-      updatedMessages.push(message)
+      updatedMessages.push(message);
       setMessages(updatedMessages);
       await AsyncStorage.setItem(
         STORAGE_KEYS.MESSAGES,
@@ -46,7 +46,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateMessage = async (messageId: string, updates: Partial<Message>) => {
     try {
-      const updatedMessages = messages.map(message => 
+      const updatedMessages = messages.map(message =>
         message.id === messageId ? { ...message, ...updates } : message
       );
       setMessages(updatedMessages);
@@ -77,14 +77,14 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   return (
-    <MessageContext.Provider 
-      value={{ 
-        messages, 
-        setMessages, 
-        deleteMessage, 
+    <MessageContext.Provider
+      value={{
+        messages,
+        setMessages,
+        deleteMessage,
         loadMessages,
         addMessage,
-        updateMessage
+        updateMessage,
       }}
     >
       {children}
