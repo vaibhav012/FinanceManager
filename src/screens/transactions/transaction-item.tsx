@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {Category, Transaction, Account} from '../../types';
 import styles from './styles';
+import commonStyles from '../../common/styles';
 
 const TransactionItem = ({
   item,
@@ -33,20 +30,22 @@ const TransactionItem = ({
       <TouchableOpacity onPress={onClick} style={styles.transactionItem}>
         <View style={styles.transactionHeader}>
           <Text style={styles.purposeText}>
-            {item.purpose || 'No Purpose'} - ₹{item.amount}
+            ₹{item.amount} :: {item.purpose || 'No Purpose'}
           </Text>
+        </View>
+        <View style={styles.transactionDataRow}>
           <Text style={styles.accountText}>
             {account ? `${account.bankName} (${account.accountNumberEndsWith})` : 'Unknown Account'}
           </Text>
+          <Text style={styles.categoryText}>Category: {category?.name || 'Uncategorized'}</Text>
         </View>
         <Text style={styles.detailsText}>
-          {item.type} | {item.date} | {new Date(item.date || '').toLocaleDateString()} | {item.time}
+          {item.type} | {new Date(item.date || '').toLocaleDateString()} | {item.time}
         </Text>
-        <Text style={styles.categoryText}>Category: {category?.name || 'Uncategorized'}</Text>
         {item.remarks && <Text style={styles.remarksText}>Remarks: {item.remarks}</Text>}
       </TouchableOpacity>
-      <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-        <Text style={styles.deleteButtonText}>×</Text>
+      <TouchableOpacity style={commonStyles.deleteButton} onPress={onDelete}>
+        <Text style={commonStyles.deleteButtonText}>×</Text>
       </TouchableOpacity>
     </View>
   );

@@ -17,7 +17,7 @@ import styles from './styles';
 import TransactionItem from './transaction-item';
 import TransactionForm from './transaction-form';
 import MonthSelector from './month-selector';
-import GroupFilters, { GroupBy } from './group-filters';
+import GroupFilters, {GroupBy} from './group-filters';
 
 type GroupedTransactions = {
   [key: string]: {
@@ -35,16 +35,20 @@ const TransactionsScreen = () => {
   const [groupBy, setGroupBy] = useState<GroupBy>(null);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState<string | null>(
-    new Date().toISOString().slice(0, 7) // Format: "YYYY-MM"
+    new Date().toISOString().slice(0, 7), // Format: "YYYY-MM"
   );
 
   const filterTransactionsByMonth = (txns: Transaction[]) => {
-    if (!currentMonth) {return txns;} // Return all transactions if no month filter
+    if (!currentMonth) {
+      return txns;
+    } // Return all transactions if no month filter
     return txns.filter(t => t.date?.startsWith(currentMonth));
   };
 
   const groupTransactions = (txns: Transaction[]): GroupedTransactions => {
-    if (!groupBy) {return {};}
+    if (!groupBy) {
+      return {};
+    }
 
     return txns.reduce((groups: GroupedTransactions, transaction) => {
       let key = '';
@@ -72,9 +76,7 @@ const TransactionsScreen = () => {
       }
 
       groups[key].transactions.push(transaction);
-      groups[key].totalAmount += transaction.type === 'credit'
-        ? (transaction.amount || 0)
-        : -(transaction.amount || 0);
+      groups[key].totalAmount += transaction.type === 'credit' ? transaction.amount || 0 : -(transaction.amount || 0);
 
       return groups;
     }, {});
@@ -131,24 +133,43 @@ const TransactionsScreen = () => {
   };
 
   const handleSave = async () => {
-    if (!currentTransaction) {return;}
-
-    // Validate required fields
-    if (
-      !currentTransaction.amount ||
-      !currentTransaction.date ||
-      !currentTransaction.time ||
-      !currentTransaction.type ||
-      !currentTransaction.category ||
-      !currentTransaction.account
-    ) {
-      Alert.alert('Please fill in all required fields');
+    if (!currentTransaction) {
       return;
     }
 
-    const updatedTransactions = currentTransaction.id
-      ? transactions.map(t => (t.id === currentTransaction.id ? currentTransaction : t))
-      : [...transactions, currentTransaction];
+    // Validate required fields
+    if (!currentTransaction.amount) {
+      Alert.alert('Please fill in amount');
+      return;
+    }
+    if (!currentTransaction.date) {
+      Alert.alert('Please fill in date');
+      return;
+    }
+    if (!currentTransaction.time) {
+      Alert.alert('Please fill in time');
+      return;
+    }
+    if (!currentTransaction.type) {
+      Alert.alert('Please fill in type');
+      return;
+    }
+    if (!currentTransaction.account) {
+      Alert.alert('Please fill in account');
+      return;
+    }
+    if (!currentTransaction.purpose) {
+      Alert.alert('Please fill in purpose');
+      return;
+    }
+
+    let updatedTransactions: Transaction[] = [];
+    const isExistingTransaction = currentTransaction.id && transactions.find(t => t.id === currentTransaction.id);
+    if (isExistingTransaction) {
+      updatedTransactions = transactions.map(t => (t.id === currentTransaction.id ? currentTransaction : t));
+    } else {
+      updatedTransactions = [...transactions, currentTransaction];
+    }
 
     setTransactions(updatedTransactions);
     await saveTransactions(updatedTransactions);
@@ -216,9 +237,7 @@ const TransactionsScreen = () => {
     const groups = groupTransactions(filteredTransactions);
 
     if (!groupBy || selectedGroup) {
-      const transactionsToShow = selectedGroup
-        ? groups[selectedGroup]?.transactions || []
-        : filteredTransactions;
+      const transactionsToShow = selectedGroup ? groups[selectedGroup]?.transactions || [] : filteredTransactions;
 
       return (
         <>
@@ -227,9 +246,7 @@ const TransactionsScreen = () => {
               <Text style={styles.selectedGroupTitle}>
                 {selectedGroup} - Total: ₹{groups[selectedGroup]?.totalAmount.toFixed(2)}
               </Text>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => setSelectedGroup(null)}>
+              <TouchableOpacity style={styles.backButton} onPress={() => setSelectedGroup(null)}>
                 <Text style={styles.backButtonText}>Back to Groups</Text>
               </TouchableOpacity>
             </View>
@@ -257,9 +274,7 @@ const TransactionsScreen = () => {
         data={Object.entries(groups)}
         keyExtractor={([key]) => key}
         renderItem={({item: [key, group]}) => (
-          <TouchableOpacity
-            style={styles.groupItem}
-            onPress={() => setSelectedGroup(key)}>
+          <TouchableOpacity style={styles.groupItem} onPress={() => setSelectedGroup(key)}>
             <Text style={styles.groupTitle}>{key}</Text>
             <Text style={styles.groupSubtitle}>
               {group.transactions.length} transactions | Total: ₹{group.totalAmount.toFixed(2)}
@@ -273,14 +288,13 @@ const TransactionsScreen = () => {
 
   useEffect(() => {
     loadInitialData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <View style={styles.container}>
-
-      {<MonthSelector currentMonth={currentMonth} onChange={handleMonthChange} onClear={handleClearMonth}/>}
-      {<GroupFilters groupBy={groupBy} onChange={handleGroupChange}/>}
+      {<MonthSelector currentMonth={currentMonth} onChange={handleMonthChange} onClear={handleClearMonth} />}
+      {<GroupFilters groupBy={groupBy} onChange={handleGroupChange} />}
       <Button title="Add New Transaction" onPress={handleAddTransaction} />
       {renderGroupedTransactions()}
 
@@ -314,6 +328,5 @@ const TransactionsScreen = () => {
     </View>
   );
 };
-
 
 export default TransactionsScreen;

@@ -78,10 +78,10 @@ const HomeScreen = () => {
     </View>
   );
 
-  const compileMessagesNow = () => async () => {
+  const compileMessagesNow =  async (refreshedMessages: Message[]) =>{
     const storedAccounts = await AsyncStorage.getItem(STORAGE_KEYS.ACCOUNTS);
     const compiledTransactions = compileMessages(
-      messages,
+      refreshedMessages,
       JSON.parse(storedAccounts ?? '[]'),
     );
     const existingTransactions = await AsyncStorage.getItem(STORAGE_KEYS.TRANSACTIONS) ?? '[]';
@@ -93,8 +93,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    compileMessagesNow();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    compileMessagesNow(messages);
   }, [messages]);
 
   return (

@@ -10,16 +10,17 @@ import {
 } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import { STORAGE_KEYS } from '../../constants';
-import { storage } from '../../utils/storage';
+import { storage, STORAGE_KEYS } from '../../utils/storage';
+import { DUMMY_DATA } from '../../constants/dummy-data';
+import type { STORAGE_KEY_VALUES } from '../../utils/storage';
 
 const ImportExportScreen = () => {
   const exportData = async (format: 'json' | 'csv') => {
     try {
       // Gather all data from AsyncStorage
       const data = await Promise.all(
-        Object.keys(STORAGE_KEYS).map(async (key) => {
-          const value = await storage.get(key as keyof typeof STORAGE_KEYS);
+        Object.values(STORAGE_KEYS).map(async (key) => {
+          const value = await storage.get(key);
           return { [key]: value };
         })
       );
@@ -88,7 +89,7 @@ const ImportExportScreen = () => {
       // Store data
       await Promise.all(
         Object.entries(data).map(([key, value]) =>
-          storage.set(key as keyof typeof STORAGE_KEYS, value)
+          storage.set(key as STORAGE_KEY_VALUES, value)
         )
       );
 
@@ -98,6 +99,24 @@ const ImportExportScreen = () => {
       Alert.alert('Error', 'Failed to import data');
     }
   };
+
+  // Only for testing - overrides all data
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const importDummyData = async () => {
+    try {
+      const promises = [];
+      for (const [key, value] of Object.entries(DUMMY_DATA)) {
+        console.log(key, value);
+        promises.push(storage.set(key as STORAGE_KEYS, value));
+      }
+      await Promise.all(promises);
+      Alert.alert('Success', 'Dummy data imported successfully!');
+    } catch (error) {
+      console.error('Import error:', error);
+      Alert.alert('Error', 'Failed to import dummy data');
+    }
+  };
+
 
   return (
     <ScrollView style={styles.container}>
@@ -136,6 +155,19 @@ const ImportExportScreen = () => {
           </Text>
         </View>
       </View>
+
+      {/* <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Text style={styles.cardTitle}>Caution: Only to test overrides all data</Text>
+        </View>
+        <View style={styles.cardContent}>
+          <TouchableOpacity
+            style={[styles.button, styles.importButton]}
+            onPress={importDummyData}>
+            <Text style={styles.buttonText}>Import Dummy Data</Text>
+          </TouchableOpacity>
+        </View>
+      </View> */}
     </ScrollView>
   );
 };

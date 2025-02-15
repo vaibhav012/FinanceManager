@@ -14,9 +14,11 @@ export const compileMessages = (
       message.sender.includes(account.senderID),
     );
 
+
     if (!matchingAccount) {
       return; // Skip if no matching account found
     }
+
 
     // Try each regex pattern for the account until we find a match
     let extractedData: Transaction | null = null;

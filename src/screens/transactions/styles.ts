@@ -1,6 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -12,6 +11,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   transactionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  transactionDataRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 5,
@@ -107,13 +111,12 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: '#ff4444',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
-    elevation: 2,
+    width: 44, // Fixed width
+    height: 44, // Fixed height to make it square
+    marginLeft: 10,
+    borderRadius: 8,
   },
   deleteButtonText: {
     color: 'white',
@@ -137,7 +140,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    height: 80,
+    height: 60,
+    minHeight: 60,
+    maxHeight: 60,
   },
   filterButton: {
     paddingHorizontal: 15,
