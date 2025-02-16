@@ -1,7 +1,7 @@
 // src/services/SMSService.ts
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import {NativeEventEmitter, NativeModules} from 'react-native';
 
-const { SMSModule } = NativeModules;
+const {SMSModule} = NativeModules;
 
 class SMSService {
   private eventEmitter: NativeEventEmitter;
@@ -16,8 +16,7 @@ class SMSService {
     SMSModule.startSMSListener();
 
     // Listen for SMS events
-    const listener = this.eventEmitter.addListener('sms_received', (event) => {
-      console.log('SMS Received Listener');
+    const listener = this.eventEmitter.addListener('sms_received', event => {
       onMessageReceived(event);
     });
 

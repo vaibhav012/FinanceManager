@@ -1,28 +1,21 @@
 // src/screens/ImportExportScreen.tsx
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Alert, StyleSheet, ScrollView} from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
-import { storage, STORAGE_KEYS } from '../../utils/storage';
-import { DUMMY_DATA } from '../../constants/dummy-data';
-import type { STORAGE_KEY_VALUES } from '../../utils/storage';
+import {storage, STORAGE_KEYS} from '../../utils/storage';
+import {DUMMY_DATA} from '../../constants/dummy-data';
+import type {STORAGE_KEY_VALUES} from '../../utils/storage';
 
 const ImportExportScreen = () => {
   const exportData = async (format: 'json' | 'csv') => {
     try {
       // Gather all data from AsyncStorage
       const data = await Promise.all(
-        Object.values(STORAGE_KEYS).map(async (key) => {
+        Object.values(STORAGE_KEYS).map(async key => {
           const value = await storage.get(key);
-          return { [key]: value };
-        })
+          return {[key]: value};
+        }),
       );
 
       const mergedData = Object.assign({}, ...data);
@@ -33,9 +26,9 @@ const ImportExportScreen = () => {
         fileContent = JSON.stringify(mergedData, null, 2);
         fileName = `finance_data_${new Date().toISOString()}.json`;
       } else {
-        const csvData = Object.entries(mergedData).map(([key, value]) =>
-          `${key},${JSON.stringify(value)}`
-        ).join('\n');
+        const csvData = Object.entries(mergedData)
+          .map(([key, value]) => `${key},${JSON.stringify(value)}`)
+          .join('\n');
         fileContent = csvData;
         fileName = `finance_data_${new Date().toISOString()}.csv`;
       }
@@ -59,7 +52,7 @@ const ImportExportScreen = () => {
       const file = result[0];
       const content = await RNFS.readFile(file.uri, 'utf8');
 
-      let data: Record<string ,any>;
+      let data: Record<string, any>;
       if (file.name?.endsWith('.json')) {
         data = JSON.parse(content);
       } else if (file.name?.endsWith('.csv')) {
@@ -87,11 +80,7 @@ const ImportExportScreen = () => {
       }
 
       // Store data
-      await Promise.all(
-        Object.entries(data).map(([key, value]) =>
-          storage.set(key as STORAGE_KEY_VALUES, value)
-        )
-      );
+      await Promise.all(Object.entries(data).map(([key, value]) => storage.set(key as STORAGE_KEY_VALUES, value)));
 
       Alert.alert('Success', 'Data imported successfully!');
     } catch (error) {
@@ -106,7 +95,6 @@ const ImportExportScreen = () => {
     try {
       const promises = [];
       for (const [key, value] of Object.entries(DUMMY_DATA)) {
-        console.log(key, value);
         promises.push(storage.set(key as STORAGE_KEYS, value));
       }
       await Promise.all(promises);
@@ -117,7 +105,6 @@ const ImportExportScreen = () => {
     }
   };
 
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
@@ -125,17 +112,11 @@ const ImportExportScreen = () => {
           <Text style={styles.cardTitle}>Export Data</Text>
         </View>
         <View style={styles.cardContent}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => exportData('json')}>
+          <TouchableOpacity style={styles.button} onPress={() => exportData('json')}>
             <Text style={styles.buttonText}>Export as JSON</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.buttonOutline]}
-            onPress={() => exportData('csv')}>
-            <Text style={[styles.buttonText, styles.buttonTextOutline]}>
-              Export as CSV
-            </Text>
+          <TouchableOpacity style={[styles.button, styles.buttonOutline]} onPress={() => exportData('csv')}>
+            <Text style={[styles.buttonText, styles.buttonTextOutline]}>Export as CSV</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -145,25 +126,20 @@ const ImportExportScreen = () => {
           <Text style={styles.cardTitle}>Import Data</Text>
         </View>
         <View style={styles.cardContent}>
-          <TouchableOpacity
-            style={[styles.button, styles.importButton]}
-            onPress={importData}>
+          <TouchableOpacity style={[styles.button, styles.importButton]} onPress={importData}>
             <Text style={styles.buttonText}>Select File to Import</Text>
           </TouchableOpacity>
-          <Text style={styles.helperText}>
-            Supported formats: JSON, CSV
-          </Text>
+          <Text style={styles.helperText}>Supported formats: JSON, CSV</Text>
         </View>
       </View>
 
+      {/* Only enable when testing in dev mode */}
       {/* <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>Caution: Only to test overrides all data</Text>
         </View>
         <View style={styles.cardContent}>
-          <TouchableOpacity
-            style={[styles.button, styles.importButton]}
-            onPress={importDummyData}>
+          <TouchableOpacity style={[styles.button, styles.importButton]} onPress={importDummyData}>
             <Text style={styles.buttonText}>Import Dummy Data</Text>
           </TouchableOpacity>
         </View>

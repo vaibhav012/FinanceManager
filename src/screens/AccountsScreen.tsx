@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Account, AccountType } from '../types';
-import { STORAGE_KEYS } from '../constants';
+import {Account, AccountType} from '../types';
+import {STORAGE_KEYS} from '../constants';
 import ListEmptyComponent from './list-empty-state';
-
 
 const AccountScreen: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -76,16 +66,14 @@ const AccountScreen: React.FC = () => {
       id: editingAccount?.id || Date.now().toString(),
       senderID,
       accountNumberEndsWith,
-      messageRegex: messageRegex.split(',').map(regex => regex.trim()),
+      messageRegex: [messageRegex],
       bankName,
       accountType,
     };
 
     let updatedAccounts: Account[];
     if (editingAccount) {
-      updatedAccounts = accounts.map(acc =>
-        acc.id === editingAccount.id ? newAccount : acc
-      );
+      updatedAccounts = accounts.map(acc => (acc.id === editingAccount.id ? newAccount : acc));
     } else {
       updatedAccounts = [...accounts, newAccount];
     }
@@ -99,54 +87,44 @@ const AccountScreen: React.FC = () => {
     setEditingAccount(account);
     setSenderID(account.senderID);
     setAccountNumberEndsWith(account.accountNumberEndsWith);
-    setMessageRegex(account.messageRegex.join(', '));
+    setMessageRegex(account.messageRegex?.[0]);
     setBankName(account.bankName);
     setAccountType(account.accountType);
     setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
-    Alert.alert(
-      'Confirm Delete',
-      'Are you sure you want to delete this account?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
+    Alert.alert('Confirm Delete', 'Are you sure you want to delete this account?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          const updatedAccounts = accounts.filter(acc => acc.id !== id);
+          setAccounts(updatedAccounts);
+          await saveAccounts(updatedAccounts);
         },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            const updatedAccounts = accounts.filter(acc => acc.id !== id);
-            setAccounts(updatedAccounts);
-            await saveAccounts(updatedAccounts);
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
-  const renderAccountItem = ({ item }: { item: Account }) => (
+  const renderAccountItem = ({item}: {item: Account}) => (
     <View style={styles.accountItem}>
       <View style={styles.accountDetails}>
         <Text style={styles.bankName}>{item.bankName}</Text>
         <Text>Sender ID: {item.senderID}</Text>
         <Text>Account ends with: {item.accountNumberEndsWith}</Text>
         <Text>Type: {item.accountType}</Text>
-        <Text>Regex patterns: {item.messageRegex.join(', ')}</Text>
+        <Text>Regex patterns: {item.messageRegex?.[0]}</Text>
       </View>
       <View style={styles.accountActions}>
-        <TouchableOpacity
-          style={[styles.button, styles.editButton]}
-          onPress={() => handleEdit(item)}
-        >
+        <TouchableOpacity style={[styles.button, styles.editButton]} onPress={() => handleEdit(item)}>
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.deleteButton]}
-          onPress={() => handleDelete(item.id)}
-        >
+        <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={() => handleDelete(item.id)}>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
@@ -155,16 +133,9 @@ const AccountScreen: React.FC = () => {
 
   const renderForm = () => (
     <View style={styles.formContainer}>
-      <Text style={styles.title}>
-        {editingAccount ? 'Edit Account' : 'Add New Account'}
-      </Text>
+      <Text style={styles.title}>{editingAccount ? 'Edit Account' : 'Add New Account'}</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Sender ID"
-        value={senderID}
-        onChangeText={setSenderID}
-      />
+      <TextInput style={styles.input} placeholder="Sender ID" value={senderID} onChangeText={setSenderID} />
 
       <TextInput
         style={styles.input}
@@ -176,54 +147,32 @@ const AccountScreen: React.FC = () => {
 
       <TextInput
         style={styles.input}
-        placeholder="Message Regex (comma-separated)"
+        placeholder="Message Regex"
         value={messageRegex}
         onChangeText={setMessageRegex}
         multiline
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Bank Name"
-        value={bankName}
-        onChangeText={setBankName}
-      />
+      <TextInput style={styles.input} placeholder="Bank Name" value={bankName} onChangeText={setBankName} />
 
       <View style={styles.pickerContainer}>
         <Text>Account Type:</Text>
-        {(['Savings', 'Credit Card', 'Loan'] as AccountType[]).map((type) => (
+        {(['Savings', 'Credit Card', 'Loan'] as AccountType[]).map(type => (
           <TouchableOpacity
             key={type}
-            style={[
-              styles.typeButton,
-              accountType === type && styles.selectedTypeButton,
-            ]}
-            onPress={() => setAccountType(type)}
-          >
-            <Text style={[
-              styles.typeButtonText,
-              accountType === type && styles.selectedTypeButtonText,
-            ]}>
-              {type}
-            </Text>
+            style={[styles.typeButton, accountType === type && styles.selectedTypeButton]}
+            onPress={() => setAccountType(type)}>
+            <Text style={[styles.typeButtonText, accountType === type && styles.selectedTypeButtonText]}>{type}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <View style={styles.formActions}>
-        <TouchableOpacity
-          style={[styles.button, styles.submitButton]}
-          onPress={handleSubmit}
-        >
-          <Text style={styles.buttonText}>
-            {editingAccount ? 'Update' : 'Add'} Account
-          </Text>
+        <TouchableOpacity style={[styles.button, styles.submitButton]} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>{editingAccount ? 'Update' : 'Add'} Account</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton]}
-          onPress={clearForm}
-        >
+        <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={clearForm}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
@@ -243,10 +192,7 @@ const AccountScreen: React.FC = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Accounts</Text>
         {!showForm && (
-          <TouchableOpacity
-            style={[styles.button, styles.addButton]}
-            onPress={() => setShowForm(true)}
-          >
+          <TouchableOpacity style={[styles.button, styles.addButton]} onPress={() => setShowForm(true)}>
             <Text style={styles.buttonText}>Add Account</Text>
           </TouchableOpacity>
         )}

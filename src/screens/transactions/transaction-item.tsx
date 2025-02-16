@@ -18,7 +18,6 @@ const TransactionItem = ({
   categories: Category[];
 }) => {
   const getAccountDetails = (accountId: string) => {
-    console.log(accountId, accounts);
     return accounts.find(account => account.id === accountId);
   };
 

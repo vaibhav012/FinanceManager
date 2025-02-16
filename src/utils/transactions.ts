@@ -16,17 +16,14 @@ export const isDuplicateTransaction = (
     const sameAmount = existing.amount === newTransaction.amount;
 
     // Parse dates for comparison
-    const existingDate = new Date(`${existing.date} ${existing.time}`);
-    const newDate = new Date(`${newTransaction.date} ${newTransaction.time}`);
+    const existingDate = new Date(`${existing.date}`);
+    const newDate = new Date(`${newTransaction.date}`);
 
     // Calculate time difference in minutes
-    const timeDifferenceMinutes =
-      Math.abs(existingDate.getTime() - newDate.getTime()) / (1000 * 60);
+    const timeDifferenceMinutes = Math.abs(existingDate.getTime() - newDate.getTime()) / (1000 * 60);
 
     // Return true if all conditions match within the time threshold
-    return (
-      sameAccount && sameAmount && timeDifferenceMinutes <= timeThresholdMinutes
-    );
+    return sameAccount && sameAmount && timeDifferenceMinutes <= timeThresholdMinutes;
   });
 };
 
@@ -50,7 +47,7 @@ export const updateTransactionSafely = (
   const newTransactions = [...existingTransactions];
 
   updatedTransactions.forEach(updatedTransaction => {
-    if(isDuplicateTransaction(updatedTransaction, existingTransactions)){
+    if (isDuplicateTransaction(updatedTransaction, existingTransactions)) {
       // TODO: Update previously added transaction
       return;
     }

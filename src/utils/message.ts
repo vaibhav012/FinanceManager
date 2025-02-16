@@ -2,23 +2,19 @@
 
 import {Account, Message, Transaction} from '../types';
 
-export const compileMessages = (
-  messages: Message[],
-  accounts: Account[],
-): Transaction[] => {
+export const compileMessages = (messages: Message[], accounts: Account[]): Transaction[] => {
   const transactions: Transaction[] = [];
 
   messages.forEach(message => {
     // Try to find matching account based on senderID
-    const matchingAccount = accounts.find(account =>
-      message.sender.includes(account.senderID),
-    );
-
+    const matchingAccount = accounts.find(account => message.sender.includes(account.senderID));
 
     if (!matchingAccount) {
       return; // Skip if no matching account found
     }
 
+    // Test log
+    // console.log(message, matchingAccount);
 
     // Try each regex pattern for the account until we find a match
     let extractedData: Transaction | null = null;
@@ -32,7 +28,7 @@ export const compileMessages = (
           const groups = match?.groups ?? {};
 
           // TODO: Handle this properly - will break in year 2100
-          if(groups.year?.length === 2){
+          if (groups.year?.length === 2) {
             groups.year = '20' + groups.year;
           }
 
@@ -48,9 +44,10 @@ export const compileMessages = (
             purpose: groups.merchant,
             category: 'Others',
           };
-        }
 
-        console.log('VVVV', message.body, regex, extractedData);
+          // Test log
+          // console.log('VVVV', 'MATCH FOUND', message.body, regex, extractedData);
+        }
       } catch (error) {
         console.error(`Invalid regex pattern: ${pattern}`, error);
       }
@@ -66,11 +63,7 @@ export const compileMessages = (
   return transactions;
 };
 
-
-const extractDataFromMessage = (
-  messageBody: string,
-  pattern: string,
-): Transaction => {
+const extractDataFromMessage = (messageBody: string, pattern: string): Transaction => {
   const data: Transaction = {
     id: null,
     messageId: null,
@@ -120,9 +113,7 @@ const extractDataFromMessage = (
 
   // Extract purpose (usually the sender/receiver or merchant name)
   // This is more complex and might need customization based on your message formats
-  const purposeMatch = messageBody.match(
-    /(?:to|from|at|by)\s+([A-Za-z0-9\s&]+)/i,
-  );
+  const purposeMatch = messageBody.match(/(?:to|from|at|by)\s+([A-Za-z0-9\s&]+)/i);
   if (purposeMatch) {
     data.purpose = purposeMatch[1].trim();
   }
