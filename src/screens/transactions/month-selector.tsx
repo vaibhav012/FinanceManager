@@ -12,7 +12,9 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
   const todaysMonth = new Date().toISOString().slice(0, 7);
 
   const handlePrevious = () => {
-    if (!currentMonth) {return;}
+    if (!currentMonth) {
+      return;
+    }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) - 1;
     let updatedYear = parseInt(year, 10);
@@ -25,7 +27,9 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
   };
 
   const handleNext = () => {
-    if (!currentMonth) {return;}
+    if (!currentMonth) {
+      return;
+    }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) + 1;
     let updatedYear = parseInt(year, 10);
@@ -55,13 +59,11 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
           <Text style={styles.clearButtonText}>Clear</Text>
         </TouchableOpacity>
       )}
-      {
-       !currentMonth && (
+      {!currentMonth && (
         <TouchableOpacity style={styles.clearButton} onPress={() => onChange(todaysMonth)}>
           <Text style={styles.clearButtonText}>Clear</Text>
         </TouchableOpacity>
-      )
-      }
+      )}
     </View>
   );
 };

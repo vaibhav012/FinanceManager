@@ -1,20 +1,11 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Pressable,
-  Clipboard,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Pressable, Clipboard, Alert, TouchableOpacity} from 'react-native';
 import {useMessages} from '../context/MessageContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {compileMessages} from '../utils/message';
-import { STORAGE_KEYS } from '../constants';
-import { Message } from '../types';
-import { updateTransactionSafely } from '../utils/transactions';
+import {STORAGE_KEYS} from '../constants';
+import {Message} from '../types';
+import {updateTransactionSafely} from '../utils/transactions';
 
 const HomeScreen = () => {
   const {messages, deleteMessage} = useMessages();
@@ -22,74 +13,47 @@ const HomeScreen = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await Clipboard.setString(text);
-      Alert.alert(
-        'Success',
-        'Message copied to clipboard',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Success', 'Message copied to clipboard', [{text: 'OK'}]);
     } catch (error) {
-      Alert.alert(
-        'Error',
-        'Failed to copy message',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Error', 'Failed to copy message', [{text: 'OK'}]);
     }
   };
 
   const handleDelete = (messageId: string) => {
-    Alert.alert(
-      'Delete Message',
-      'Are you sure you want to delete this message?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          onPress: () => deleteMessage(messageId),
-          style: 'destructive',
-        },
-      ]
-    );
+    Alert.alert('Delete Message', 'Are you sure you want to delete this message?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => deleteMessage(messageId),
+        style: 'destructive',
+      },
+    ]);
   };
 
   const renderItem = ({item}: {item: Message}) => (
     <View style={styles.messageWrapper}>
       <Pressable
         onLongPress={() => copyToClipboard(item.body)}
-        style={({pressed}) => [
-          styles.messageCard,
-          pressed && styles.messageCardPressed,
-        ]}
-      >
+        style={({pressed}) => [styles.messageCard, pressed && styles.messageCardPressed]}>
         <Text style={styles.sender}>{item.sender}</Text>
         <Text style={styles.body}>{item.body}</Text>
-        <Text style={styles.timestamp}>
-          {new Date(item.timestamp).toLocaleDateString()}
-        </Text>
+        <Text style={styles.timestamp}>{new Date(item.timestamp).toLocaleDateString()}</Text>
       </Pressable>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleDelete(item.id)}
-      >
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
         <Text style={styles.deleteButtonText}>Delete</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const compileMessagesNow =  async (refreshedMessages: Message[]) =>{
+  const compileMessagesNow = async (refreshedMessages: Message[]) => {
     const storedAccounts = await AsyncStorage.getItem(STORAGE_KEYS.ACCOUNTS);
-    const compiledTransactions = compileMessages(
-      refreshedMessages,
-      JSON.parse(storedAccounts ?? '[]'),
-    );
-    const existingTransactions = await AsyncStorage.getItem(STORAGE_KEYS.TRANSACTIONS) ?? '[]';
+    const compiledTransactions = compileMessages(refreshedMessages, JSON.parse(storedAccounts ?? '[]'));
+    const existingTransactions = (await AsyncStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) ?? '[]';
     const mergedTransactions = updateTransactionSafely(compiledTransactions, JSON.parse(existingTransactions));
-    await AsyncStorage.setItem(
-      STORAGE_KEYS.TRANSACTIONS,
-      JSON.stringify(mergedTransactions),
-    );
+    await AsyncStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(mergedTransactions));
   };
 
   useEffect(() => {

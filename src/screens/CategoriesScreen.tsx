@@ -78,7 +78,6 @@ const CategoriesScreen = () => {
     }
   };
 
-
   const handleAddCategory = () => {
     setEditingCategory(null);
     setName('');
@@ -142,7 +141,9 @@ const CategoriesScreen = () => {
         <Icon name={item.icon} size={30} color="white" />
       </View>
       <Text style={styles.categoryName}>{item.name}</Text>
-      <Text style={styles.messageCount}><TransactionsCount name={item.name}/></Text>
+      <Text style={styles.messageCount}>
+        <TransactionsCount name={item.name} />
+      </Text>
       <TouchableOpacity style={styles.editButton} onPress={() => handleEditCategory(item)}>
         <Icon name="lead-pencil" size={20} color="#666" />
       </TouchableOpacity>

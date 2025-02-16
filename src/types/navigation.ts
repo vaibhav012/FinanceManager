@@ -1,4 +1,3 @@
-
 export type RootDrawerParamList = {
   MainTabs: undefined;
   ImportExport: undefined;
@@ -10,4 +9,3 @@ export type RootTabParamList = {
   Accounts: undefined;
   Transactions: undefined;
 };
-

@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {Text, TouchableOpacity, ScrollView} from 'react-native';
 import styles from './styles';
 
 export type GroupBy = 'category' | 'account' | 'month' | null;
 
-const GroupFilters = ({onChange, groupBy}: {
-  groupBy: GroupBy,
-  onChange: (group: GroupBy) => void;
-}) => (
+const GroupFilters = ({onChange, groupBy}: {groupBy: GroupBy; onChange: (group: GroupBy) => void}) => (
   <ScrollView horizontal style={styles.filterContainer} showsHorizontalScrollIndicator={false}>
     <TouchableOpacity
       style={[styles.filterButton, !groupBy && styles.filterButtonActive]}
@@ -25,9 +18,7 @@ const GroupFilters = ({onChange, groupBy}: {
       onPress={() => {
         onChange('category');
       }}>
-      <Text style={[styles.filterButtonText, groupBy === 'category' && styles.filterButtonTextActive]}>
-        Category
-      </Text>
+      <Text style={[styles.filterButtonText, groupBy === 'category' && styles.filterButtonTextActive]}>Category</Text>
     </TouchableOpacity>
     <TouchableOpacity
       style={[styles.filterButton, groupBy === 'account' && styles.filterButtonActive]}

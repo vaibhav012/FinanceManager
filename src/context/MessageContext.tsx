@@ -1,8 +1,8 @@
 // context/MessageContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { STORAGE_KEYS } from '../constants';
-import { Message } from '../types';
+import {STORAGE_KEYS} from '../constants';
+import {Message} from '../types';
 
 interface MessageContextType {
   messages: Message[];
@@ -15,7 +15,7 @@ interface MessageContextType {
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
 
-export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const MessageProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const loadMessages = async () => {
@@ -35,10 +35,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const updatedMessages = JSON.parse(currentMessages || '[]');
       updatedMessages.push(message);
       setMessages(updatedMessages);
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MESSAGES,
-        JSON.stringify(updatedMessages)
-      );
+      await AsyncStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updatedMessages));
     } catch (error) {
       console.error('Error adding message:', error);
     }
@@ -46,14 +43,9 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateMessage = async (messageId: string, updates: Partial<Message>) => {
     try {
-      const updatedMessages = messages.map(message =>
-        message.id === messageId ? { ...message, ...updates } : message
-      );
+      const updatedMessages = messages.map(message => (message.id === messageId ? {...message, ...updates} : message));
       setMessages(updatedMessages);
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MESSAGES,
-        JSON.stringify(updatedMessages)
-      );
+      await AsyncStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updatedMessages));
     } catch (error) {
       console.error('Error updating message:', error);
     }
@@ -63,10 +55,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       const updatedMessages = messages.filter(message => message.id !== messageId);
       setMessages(updatedMessages);
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.MESSAGES,
-        JSON.stringify(updatedMessages)
-      );
+      await AsyncStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(updatedMessages));
     } catch (error) {
       console.error('Error deleting message:', error);
     }
@@ -85,8 +74,7 @@ export const MessageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadMessages,
         addMessage,
         updateMessage,
-      }}
-    >
+      }}>
       {children}
     </MessageContext.Provider>
   );

@@ -14,7 +14,7 @@ export type Category = {
 
 export type Transaction = {
   id: string | null;
-  account:  string | null;
+  account: string | null;
   amount: number | null;
   date: string | null;
   time: string | null;
@@ -22,7 +22,7 @@ export type Transaction = {
   purpose: string | null;
   category: string | null;
   messageId: string | null;
-  createdAt: string | null
+  createdAt: string | null;
   remarks?: string;
 };
 

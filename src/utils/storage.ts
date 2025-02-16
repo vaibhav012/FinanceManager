@@ -2,10 +2,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export enum STORAGE_KEYS {
-  TRANSACTIONS='@transactions',
-  MESSAGES='@messages', // Added @ prefix for consistency
-  CATEGORIES='@categories',
-  ACCOUNTS='@accounts',
+  TRANSACTIONS = '@transactions',
+  MESSAGES = '@messages', // Added @ prefix for consistency
+  CATEGORIES = '@categories',
+  ACCOUNTS = '@accounts',
 }
 
 export type STORAGE_KEY_VALUES = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
