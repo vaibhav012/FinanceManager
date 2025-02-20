@@ -13,7 +13,7 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
 
   const handlePrevious = () => {
     if (!currentMonth) {
-      return;
+      return todaysMonth;
     }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) - 1;
@@ -28,7 +28,7 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
 
   const handleNext = () => {
     if (!currentMonth) {
-      return;
+      return todaysMonth;
     }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) + 1;

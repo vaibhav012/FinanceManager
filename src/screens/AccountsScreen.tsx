@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Account, AccountType} from '../types';
-import {STORAGE_KEYS} from '../constants';
 import ListEmptyComponent from './list-empty-state';
+import {STORAGE_KEYS} from '../utils/storage';
 
 const AccountScreen: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);

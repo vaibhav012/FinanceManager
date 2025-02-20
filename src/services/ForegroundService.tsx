@@ -1,7 +1,9 @@
 // src/services/ForegroundService.ts
 import notifee, {AndroidImportance} from '@notifee/react-native';
-import {Message} from '../types';
+import {Account, Message} from '../types';
 import SMSService from './SMSService';
+import {storage, STORAGE_KEYS} from '../utils/storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CHANNEL_ID = 'sms_monitor';
 
@@ -17,8 +19,11 @@ export const startForegroundService = async (addMessage: (message: Message) => v
 
   // Register the foreground service with the notification
   notifee.registerForegroundService(() => {
-    return new Promise(() => {
+    return new Promise(async () => {
       // Start SMS listening service
+
+      const accounts = await storage.get<Account[]>(STORAGE_KEYS.ACCOUNTS);
+
       SMSService.start(event => {
         const newMessage: Message = {
           id: Date.now().toString(),
@@ -26,6 +31,17 @@ export const startForegroundService = async (addMessage: (message: Message) => v
           sender: event.sender,
           timestamp: event.timestamp,
         };
+
+        console.log('Message Received');
+        // const acc = AsyncStorage.getItem(STORAGE_KEYS.ACCOUNTS);
+
+        // const matchingAccount = accounts?.find(account => newMessage.sender.includes(account.senderID));
+
+        // console.log({newMessage}, matchingAccount, accounts, acc);
+
+        // if (!matchingAccount) {
+        //   return; // Skip if no matching account found
+        // }
 
         addMessage(newMessage);
         // showMessageNotification(newMessage);

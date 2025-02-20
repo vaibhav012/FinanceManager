@@ -1,4 +1,3 @@
-import {STORAGE_KEYS} from '.';
 import {Account, Category, Message, Transaction} from '../types';
 
 export const DUMMY_DATA: {
@@ -7,7 +6,7 @@ export const DUMMY_DATA: {
   '@categories'?: Category[];
   '@transactions'?: Transaction[];
 } = {
-  [STORAGE_KEYS.MESSAGES]: [
+  messages: [
     {
       id: 'msg1',
       sender: 'HDFCBK',
@@ -27,7 +26,7 @@ export const DUMMY_DATA: {
       timestamp: 1707916530456,
     },
   ],
-  [STORAGE_KEYS.ACCOUNTS]: [
+  '@accounts': [
     {
       id: 'acc1',
       senderID: 'HDFCBK',

@@ -13,8 +13,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category} from '../types';
-import {STORAGE_KEYS} from '../constants';
 import TransactionsCount from './transactions-count';
+import {STORAGE_KEYS} from '../utils/storage';
 
 const DEFAULT_CATEGORIES: Category[] = [
   {id: '1', name: 'Bills', icon: 'receipt', color: '#FF6B6B'},

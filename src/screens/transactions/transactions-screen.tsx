@@ -12,12 +12,12 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category, Transaction, Account} from '../../types';
-import {STORAGE_KEYS} from '../../constants';
 import styles from './styles';
 import TransactionItem from './transaction-item';
 import TransactionForm from './transaction-form';
 import MonthSelector from '../../common/month-selector/month-selector';
 import GroupFilters, {GroupBy} from './group-filters';
+import {STORAGE_KEYS} from '../../utils/storage';
 
 type GroupedTransactions = {
   [key: string]: {
@@ -39,9 +39,10 @@ const TransactionsScreen = () => {
   );
 
   const filterTransactionsByMonth = (txns: Transaction[]) => {
+    // Return all transactions if no month filter
     if (!currentMonth) {
       return txns;
-    } // Return all transactions if no month filter
+    }
     return txns.filter(t => t.date?.startsWith(currentMonth));
   };
 

@@ -1,8 +1,8 @@
 // context/MessageContext.tsx
 import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {STORAGE_KEYS} from '../constants';
 import {Message} from '../types';
+import {STORAGE_KEYS} from '../utils/storage';
 
 interface MessageContextType {
   messages: Message[];
