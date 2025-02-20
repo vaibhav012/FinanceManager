@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
-import {View, Text, TextInput, ScrollView, Alert} from 'react-native';
+import {View, Text, TextInput, ScrollView} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {Category, Transaction, Account} from '../../types';
 import styles from './styles';

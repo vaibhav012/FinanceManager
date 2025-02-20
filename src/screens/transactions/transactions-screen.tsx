@@ -16,7 +16,7 @@ import {STORAGE_KEYS} from '../../constants';
 import styles from './styles';
 import TransactionItem from './transaction-item';
 import TransactionForm from './transaction-form';
-import MonthSelector from './month-selector';
+import MonthSelector from '../../common/month-selector/month-selector';
 import GroupFilters, {GroupBy} from './group-filters';
 
 type GroupedTransactions = {
