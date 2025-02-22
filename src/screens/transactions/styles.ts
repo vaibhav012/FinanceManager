@@ -3,12 +3,14 @@ import {StyleSheet, Dimensions} from 'react-native';
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flex: 1,
+  actionRow: {
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
   },
   list: {
-    marginTop: 20,
+    padding: 8,
+    paddingVertical: 4,
   },
   transactionHeader: {
     flexDirection: 'row',
@@ -89,15 +91,16 @@ const styles = StyleSheet.create({
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 15,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 15,
+    paddingVertical: 6,
     borderTopWidth: 1,
     borderTopColor: '#EEE',
     backgroundColor: '#FFF',
   },
-  transactionContainer: {
+  transactionWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start', // Changed from 'center' to align with top of card
     marginBottom: 8,
   },
   transactionItem: {
@@ -109,20 +112,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
   },
-  deleteButton: {
-    backgroundColor: '#ff4444',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 44, // Fixed width
-    height: 44, // Fixed height to make it square
-    marginLeft: 10,
-    borderRadius: 8,
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   remarksText: {
     fontSize: 14,
     color: '#666',
@@ -133,51 +122,6 @@ const styles = StyleSheet.create({
     height: 80,
     textAlignVertical: 'top',
     paddingTop: 8,
-  },
-  filterContainer: {
-    flexDirection: 'column',
-    marginBottom: 10,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-    height: 60,
-    minHeight: 60,
-    maxHeight: 60,
-  },
-  filterButton: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    marginHorizontal: 5,
-    borderRadius: 20,
-    backgroundColor: '#F0F0F0',
-    height: 40,
-  },
-  filterButtonActive: {
-    backgroundColor: '#007AFF',
-  },
-  filterButtonText: {
-    color: '#333',
-  },
-  filterButtonTextActive: {
-    color: '#FFF',
-  },
-  monthSelector: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#F8F8F8',
-  },
-  monthButton: {
-    padding: 10,
-  },
-  monthButtonText: {
-    fontSize: 20,
-    color: '#007AFF',
-  },
-  currentMonth: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   groupItem: {
     padding: 15,

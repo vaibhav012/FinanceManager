@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert, ActivityIndicator} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Account, AccountType} from '../types';
-import {STORAGE_KEYS} from '../constants';
 import ListEmptyComponent from './list-empty-state';
+import {STORAGE_KEYS} from '../utils/storage';
+import Button from '../common/Button';
+import styles from './accounts-styles';
+import commonStyles from '../common/styles';
 
 const AccountScreen: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -112,7 +115,7 @@ const AccountScreen: React.FC = () => {
   };
 
   const renderAccountItem = ({item}: {item: Account}) => (
-    <View style={styles.accountItem}>
+    <View style={{...commonStyles.card, ...styles.accountsCard}}>
       <View style={styles.accountDetails}>
         <Text style={styles.bankName}>{item.bankName}</Text>
         <Text>Sender ID: {item.senderID}</Text>
@@ -121,12 +124,8 @@ const AccountScreen: React.FC = () => {
         <Text>Regex patterns: {item.messageRegex?.[0]}</Text>
       </View>
       <View style={styles.accountActions}>
-        <TouchableOpacity style={[styles.button, styles.editButton]} onPress={() => handleEdit(item)}>
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={() => handleDelete(item.id)}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity>
+        <Button label="Edit" onPress={() => handleEdit(item)} />
+        <Button label="Delete" onPress={() => handleDelete(item.id)} />
       </View>
     </View>
   );
@@ -189,14 +188,7 @@ const AccountScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Accounts</Text>
-        {!showForm && (
-          <TouchableOpacity style={[styles.button, styles.addButton]} onPress={() => setShowForm(true)}>
-            <Text style={styles.buttonText}>Add Account</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      <View style={styles.header}>{!showForm && <Button label="New" onPress={() => setShowForm(true)} />}</View>
 
       {showForm && renderForm()}
 
@@ -210,123 +202,5 @@ const AccountScreen: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  formContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    elevation: 2,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 4,
-    padding: 8,
-    marginBottom: 12,
-  },
-  pickerContainer: {
-    marginBottom: 12,
-  },
-  typeButton: {
-    padding: 8,
-    borderRadius: 4,
-    marginVertical: 4,
-    backgroundColor: '#f0f0f0',
-  },
-  selectedTypeButton: {
-    backgroundColor: '#007AFF',
-  },
-  typeButtonText: {
-    color: '#333',
-  },
-  selectedTypeButtonText: {
-    color: 'white',
-  },
-  formActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  button: {
-    padding: 12,
-    borderRadius: 4,
-    minWidth: 100,
-    alignItems: 'center',
-  },
-  addButton: {
-    backgroundColor: '#4CAF50',
-  },
-  submitButton: {
-    backgroundColor: '#007AFF',
-  },
-  cancelButton: {
-    backgroundColor: '#FF3B30',
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-    marginRight: 8,
-  },
-  deleteButton: {
-    backgroundColor: '#FF3B30',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  list: {
-    flex: 1,
-  },
-  accountItem: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 8,
-    elevation: 1,
-  },
-  accountDetails: {
-    marginBottom: 8,
-  },
-  bankName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  accountActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  emptyText: {
-    textAlign: 'center',
-    color: '#666',
-    marginTop: 24,
-  },
-});
 
 export default AccountScreen;

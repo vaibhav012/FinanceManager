@@ -25,8 +25,8 @@ const TransactionItem = ({
   const category = categories.find(cat => cat.id === item.category);
 
   return (
-    <View style={styles.transactionContainer}>
-      <TouchableOpacity onPress={onClick} style={styles.transactionItem}>
+    <View style={styles.transactionWrapper}>
+      <TouchableOpacity onPress={onClick} style={commonStyles.card}>
         <View style={styles.transactionHeader}>
           <Text style={styles.purposeText}>
             ₹{item.amount} :: {item.purpose || 'No Purpose'}

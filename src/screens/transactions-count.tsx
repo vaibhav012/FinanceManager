@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Transaction} from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {STORAGE_KEYS} from '../constants';
+import {STORAGE_KEYS} from '../utils/storage';
 
 const TransactionsCount = ({name = ''}) => {
   const [count, setCount] = useState('-');
@@ -23,7 +23,7 @@ const TransactionsCount = ({name = ''}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <>{count + 'messages'}</>;
+  return <>{count + ' messages'}</>;
 };
 
 export default TransactionsCount;

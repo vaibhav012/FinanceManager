@@ -1,6 +1,6 @@
 import MessagesScreen from './messages/messages-screen';
-import CategoriesScreen from './CategoriesScreen';
-import AccountsScreen from './AccountsScreen';
+import CategoriesScreen from './categories-screen';
+import AccountsScreen from './accounts-screen';
 import TransactionsScreen from './transactions/transactions-screen';
 
 export const screens = {

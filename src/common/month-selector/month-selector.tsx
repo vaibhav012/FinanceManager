@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import styles from './styles';
 
 type MonthSelectorProps = {
@@ -13,7 +13,7 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
 
   const handlePrevious = () => {
     if (!currentMonth) {
-      return;
+      return todaysMonth;
     }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) - 1;
@@ -28,7 +28,7 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
 
   const handleNext = () => {
     if (!currentMonth) {
-      return;
+      return todaysMonth;
     }
     const [year, month] = currentMonth.split('-');
     let updatedMonth = parseInt(month, 10) + 1;
@@ -42,27 +42,29 @@ const MonthSelector = ({currentMonth, onChange, onClear}: MonthSelectorProps) =>
   };
 
   return (
-    <View style={styles.monthSelector}>
-      <TouchableOpacity style={styles.monthButton} onPress={handlePrevious}>
-        <Text style={styles.monthButtonText}>←</Text>
-      </TouchableOpacity>
-      <Text style={styles.currentMonth}>
-        {currentMonth
-          ? new Date(currentMonth).toLocaleString('default', {month: 'long', year: 'numeric'})
-          : 'All Transactions'}
-      </Text>
-      <TouchableOpacity style={styles.monthButton} onPress={handleNext}>
-        <Text style={styles.monthButtonText}>→</Text>
-      </TouchableOpacity>
+    <View style={styles.monthSelectorWrapper}>
+      <View style={styles.monthControlWrapper}>
+        <Pressable style={{...styles.monthButton}} onPress={handlePrevious}>
+          <Text style={{...styles.monthButtonText}}>{'<'}</Text>
+        </Pressable>
+        <Text style={styles.currentMonth}>
+          {currentMonth
+            ? new Date(currentMonth).toLocaleString('default', {month: 'long', year: 'numeric'})
+            : 'All Transactions'}
+        </Text>
+        <Pressable style={styles.monthButton} onPress={handleNext}>
+          <Text style={styles.monthButtonText}>{'>'} </Text>
+        </Pressable>
+      </View>
       {currentMonth && (
-        <TouchableOpacity style={styles.clearButton} onPress={onClear}>
+        <Pressable style={styles.clearButton} onPress={onClear}>
           <Text style={styles.clearButtonText}>Clear</Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
       {!currentMonth && (
-        <TouchableOpacity style={styles.clearButton} onPress={() => onChange(todaysMonth)}>
-          <Text style={styles.clearButtonText}>Clear</Text>
-        </TouchableOpacity>
+        <Pressable style={styles.clearButton} onPress={() => onChange(todaysMonth)}>
+          <Text style={styles.clearButtonText}>Today</Text>
+        </Pressable>
       )}
     </View>
   );

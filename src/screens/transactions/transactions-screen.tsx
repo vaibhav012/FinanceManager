@@ -3,21 +3,23 @@ import {
   View,
   FlatList,
   Text,
-  Button,
   Modal,
   KeyboardAvoidingView,
   Platform,
   Alert,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category, Transaction, Account} from '../../types';
-import {STORAGE_KEYS} from '../../constants';
 import styles from './styles';
 import TransactionItem from './transaction-item';
 import TransactionForm from './transaction-form';
 import MonthSelector from '../../common/month-selector/month-selector';
 import GroupFilters, {GroupBy} from './group-filters';
+import {STORAGE_KEYS} from '../../utils/storage';
+import commonStyles from '../../common/styles';
+import Button from '../../common/Button';
 
 type GroupedTransactions = {
   [key: string]: {
@@ -39,9 +41,10 @@ const TransactionsScreen = () => {
   );
 
   const filterTransactionsByMonth = (txns: Transaction[]) => {
+    // Return all transactions if no month filter
     if (!currentMonth) {
       return txns;
-    } // Return all transactions if no month filter
+    }
     return txns.filter(t => t.date?.startsWith(currentMonth));
   };
 
@@ -234,7 +237,10 @@ const TransactionsScreen = () => {
 
   const renderGroupedTransactions = () => {
     const filteredTransactions = filterTransactionsByMonth(transactions);
-    const groups = groupTransactions(filteredTransactions);
+    const sortedTransactions = filteredTransactions?.sort(
+      (a, b) => new Date(b.date ?? '').getTime() - new Date(a.date ?? '').getTime(),
+    );
+    const groups = groupTransactions(sortedTransactions);
 
     if (!groupBy || selectedGroup) {
       const transactionsToShow = selectedGroup ? groups[selectedGroup]?.transactions || [] : filteredTransactions;
@@ -292,10 +298,13 @@ const TransactionsScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View>
       {<MonthSelector currentMonth={currentMonth} onChange={handleMonthChange} onClear={handleClearMonth} />}
       {<GroupFilters groupBy={groupBy} onChange={handleGroupChange} />}
-      <Button title="Add New Transaction" onPress={handleAddTransaction} />
+      <View style={styles.actionRow}>
+        <Button onPress={handleAddTransaction} label="New" />
+      </View>
+
       {renderGroupedTransactions()}
 
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
@@ -312,9 +321,9 @@ const TransactionsScreen = () => {
               />
             )}
             <View style={styles.modalButtons}>
-              <Button title="Save" onPress={handleSave} />
+              <Button label="Save" onPress={handleSave} />
               <Button
-                title="Cancel"
+                label="Cancel"
                 onPress={() => {
                   setModalVisible(false);
                   setCurrentTransaction(null);

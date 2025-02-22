@@ -1,4 +1,3 @@
-import {STORAGE_KEYS} from '.';
 import {Account, Category, Message, Transaction} from '../types';
 
 export const DUMMY_DATA: {
@@ -7,27 +6,27 @@ export const DUMMY_DATA: {
   '@categories'?: Category[];
   '@transactions'?: Transaction[];
 } = {
-  [STORAGE_KEYS.MESSAGES]: [
+  messages: [
     {
       id: 'msg1',
       sender: 'HDFCBK',
       body: 'Rs.2500 spent on HDFC Bank Card x1234 at Amazon on 2025-02-15:14:30:25:123',
-      timestamp: 1708002625123,
+      timestamp: 1739538625123,
     },
     {
       id: 'msg2',
       sender: 'AXISBK',
       body: 'Spent\nCard no. ******1234 spent INR 10000 on 2025-02-15:14:30:25:123 at Amazon',
-      timestamp: 1707916530456,
+      timestamp: 1739538625123,
     },
     {
       id: 'msg3',
       sender: 'JD-SBICRD',
       body: 'Rs.123.00 spent on your SBI Credit Card ending 1234 at Swiggy IN on 13/02/25. Trxn. not done by you? Report at https://sbicard.com/Dispute',
-      timestamp: 1707916530456,
+      timestamp: 1739538625123,
     },
   ],
-  [STORAGE_KEYS.ACCOUNTS]: [
+  '@accounts': [
     {
       id: 'acc1',
       senderID: 'HDFCBK',

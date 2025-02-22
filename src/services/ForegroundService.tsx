@@ -1,7 +1,9 @@
 // src/services/ForegroundService.ts
 import notifee, {AndroidImportance} from '@notifee/react-native';
-import {Message} from '../types';
+import {Account, Message} from '../types';
 import SMSService from './SMSService';
+import {storage, STORAGE_KEYS} from '../utils/storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CHANNEL_ID = 'sms_monitor';
 
@@ -17,8 +19,9 @@ export const startForegroundService = async (addMessage: (message: Message) => v
 
   // Register the foreground service with the notification
   notifee.registerForegroundService(() => {
-    return new Promise(() => {
+    return new Promise(async () => {
       // Start SMS listening service
+
       SMSService.start(event => {
         const newMessage: Message = {
           id: Date.now().toString(),
@@ -28,7 +31,6 @@ export const startForegroundService = async (addMessage: (message: Message) => v
         };
 
         addMessage(newMessage);
-        // showMessageNotification(newMessage);
       });
     });
   });

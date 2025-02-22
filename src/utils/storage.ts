@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export enum STORAGE_KEYS {
   TRANSACTIONS = '@transactions',
-  MESSAGES = '@messages', // Added @ prefix for consistency
+  MESSAGES = 'messages', // Added @ prefix for consistency
   CATEGORIES = '@categories',
   ACCOUNTS = '@accounts',
 }

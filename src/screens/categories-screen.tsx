@@ -13,8 +13,11 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category} from '../types';
-import {STORAGE_KEYS} from '../constants';
 import TransactionsCount from './transactions-count';
+import {STORAGE_KEYS} from '../utils/storage';
+import styles from './categories-styles';
+import Button from '../common/Button';
+import commonStyles from '../common/styles';
 
 const DEFAULT_CATEGORIES: Category[] = [
   {id: '1', name: 'Bills', icon: 'receipt', color: '#FF6B6B'},
@@ -136,23 +139,20 @@ const CategoriesScreen = () => {
   };
 
   const renderCategoryItem = ({item}: {item: Category}) => (
-    <TouchableOpacity style={styles.categoryCard} onLongPress={() => handleEditCategory(item)}>
+    <TouchableOpacity
+      style={{...commonStyles.card, ...styles.categoryCard}}
+      onLongPress={() => handleEditCategory(item)}>
       <View style={[styles.iconContainer, {backgroundColor: item.color}]}>
-        <Icon name={item.icon} size={30} color="white" />
+        <Icon name={item.icon} size={20} color="white" />
       </View>
       <Text style={styles.categoryName}>{item.name}</Text>
       <Text style={styles.messageCount}>
         <TransactionsCount name={item.name} />
       </Text>
-      <TouchableOpacity style={styles.editButton} onPress={() => handleEditCategory(item)}>
-        <Icon name="lead-pencil" size={20} color="#666" />
-      </TouchableOpacity>
-      {/* <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => handleDeleteCategory(item)}
-      >
-        <Icon name="delete" size={20} color="#666" />
-      </TouchableOpacity> */}
+      <View style={styles.categoryActionsWrapper}>
+        <Button label="Edit" onPress={() => handleEditCategory(item)} />
+        <Button label="Delete" onPress={() => handleDeleteCategory(item)} />
+      </View>
     </TouchableOpacity>
   );
 
@@ -171,10 +171,7 @@ const CategoriesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddCategory}>
-        <Icon name="plus" size={24} color="white" />
-        <Text style={styles.addButtonText}>Add Category</Text>
-      </TouchableOpacity>
+      <Button label="New" onPress={handleAddCategory} />
 
       <FlatList
         data={categories}
@@ -239,152 +236,5 @@ const CategoriesScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  listContainer: {
-    padding: 10,
-  },
-  categoryCard: {
-    flex: 1,
-    margin: 8,
-    padding: 16,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    alignItems: 'center',
-  },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  categoryName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  messageCount: {
-    fontSize: 14,
-    color: '#666',
-  },
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#007AFF',
-    padding: 12,
-    margin: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  editButton: {
-    position: 'absolute',
-    top: 8,
-    right: 36,
-    padding: 4,
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    padding: 4,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 16,
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  iconOption: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
-    marginBottom: 16,
-  },
-  selectedIcon: {
-    backgroundColor: '#007AFF',
-  },
-  colorContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  colorOption: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    marginRight: 8,
-  },
-  selectedColor: {
-    borderWidth: 3,
-    borderColor: '#007AFF',
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    padding: 12,
-    borderRadius: 8,
-    minWidth: 100,
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-  },
-  cancelButton: {
-    backgroundColor: '#FF3B30',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
 
 export default CategoriesScreen;
