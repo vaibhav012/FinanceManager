@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    minHeight: 56,
+    maxHeight: 58,
   },
   filterButton: {
     paddingHorizontal: 16,

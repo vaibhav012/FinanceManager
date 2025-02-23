@@ -3,6 +3,10 @@ import {StyleSheet, Dimensions} from 'react-native';
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  transactionsWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   actionRow: {
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,

@@ -298,7 +298,7 @@ const TransactionsScreen = () => {
   }, []);
 
   return (
-    <View>
+    <View style={styles.transactionsWrapper}>
       {<MonthSelector currentMonth={currentMonth} onChange={handleMonthChange} onClear={handleClearMonth} />}
       {<GroupFilters groupBy={groupBy} onChange={handleGroupChange} />}
       <View style={styles.actionRow}>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import {SHORT_MONTH_TO_NUMBER} from '../constants/date';
 import {Account, Message, Transaction} from '../types';
 
 export const compileMessages = (messages: Message[], accounts: Account[]): Transaction[] => {
@@ -31,13 +32,17 @@ export const compileMessages = (messages: Message[], accounts: Account[]): Trans
           if (groups.year?.length === 2) {
             groups.year = '20' + groups.year;
           }
+          // convert month to number
+          if (isNaN(Number(groups.month))) {
+            groups.month = SHORT_MONTH_TO_NUMBER[groups.month?.toLowerCase()];
+          }
 
           extractedData = {
             id: generateTransactionId(),
             messageId: message.id,
             createdAt: new Date().toISOString(),
             account: matchingAccount.id,
-            amount: Number.parseFloat(groups.amount),
+            amount: Number.parseFloat(groups.amount?.replace(',', '')),
             date: `${groups.year}-${groups.month}-${groups.day}`,
             time: `${groups.hour}:${groups.minute}:${groups.second}`,
             type: 'debit',
