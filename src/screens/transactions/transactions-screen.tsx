@@ -1,15 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  FlatList,
-  Text,
-  Modal,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  TouchableOpacity,
-  Pressable,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, FlatList, Text, Modal, KeyboardAvoidingView, Platform, Alert, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category, Transaction, Account} from '../../types';
 import styles from './styles';
@@ -18,8 +8,8 @@ import TransactionForm from './transaction-form';
 import MonthSelector from '../../common/month-selector/month-selector';
 import GroupFilters, {GroupBy} from './group-filters';
 import {STORAGE_KEYS} from '../../utils/storage';
-import commonStyles from '../../common/styles';
 import Button from '../../common/Button';
+import {useFocusEffect} from '@react-navigation/native';
 
 type GroupedTransactions = {
   [key: string]: {
@@ -292,10 +282,9 @@ const TransactionsScreen = () => {
     );
   };
 
-  useEffect(() => {
+  useFocusEffect(() => {
     loadInitialData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   return (
     <View style={styles.transactionsWrapper}>

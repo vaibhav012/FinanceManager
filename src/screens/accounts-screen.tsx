@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, FlatList, Alert, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Account, AccountType} from '../types';
@@ -7,6 +7,7 @@ import {STORAGE_KEYS} from '../utils/storage';
 import Button from '../common/Button';
 import styles from './accounts-styles';
 import commonStyles from '../common/styles';
+import {useFocusEffect} from '@react-navigation/native';
 
 const AccountScreen: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -22,9 +23,9 @@ const AccountScreen: React.FC = () => {
   const [accountType, setAccountType] = useState<AccountType>('Savings');
 
   // Load accounts from AsyncStorage when component mounts
-  useEffect(() => {
+  useFocusEffect(() => {
     loadAccounts();
-  }, []);
+  });
 
   const loadAccounts = async () => {
     try {

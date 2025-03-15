@@ -6,9 +6,10 @@ import MessageItem from './message-item';
 
 import styles from './styles';
 import MonthSelector from '../../common/month-selector/month-selector';
+import {useFocusEffect} from '@react-navigation/native';
 
 const MessagesScreen = () => {
-  const {messages} = useMessages();
+  const {messages, loadMessages} = useMessages();
 
   const [currentMonth, setCurrentMonth] = useState<string | null>(
     new Date().toISOString().slice(0, 7), // Format: "YYYY-MM"
@@ -34,6 +35,10 @@ const MessagesScreen = () => {
   const handleClearMonth = () => {
     setCurrentMonth(null);
   };
+
+  useFocusEffect(() => {
+    loadMessages();
+  });
 
   const filteredMessages = filterMessagesByMonth(messages);
 

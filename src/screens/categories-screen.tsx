@@ -1,15 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Category} from '../types';
@@ -18,6 +8,7 @@ import {STORAGE_KEYS} from '../utils/storage';
 import styles from './categories-styles';
 import Button from '../common/Button';
 import commonStyles from '../common/styles';
+import {useFocusEffect} from '@react-navigation/native';
 
 const DEFAULT_CATEGORIES: Category[] = [
   {id: '1', name: 'Bills', icon: 'receipt', color: '#FF6B6B'},
@@ -156,10 +147,9 @@ const CategoriesScreen = () => {
     </TouchableOpacity>
   );
 
-  useEffect(() => {
+  useFocusEffect(() => {
     loadCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   if (isLoading) {
     return (

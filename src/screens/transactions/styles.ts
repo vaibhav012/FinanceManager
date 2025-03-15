@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
   transactionsWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    height: '100%',
   },
   actionRow: {
     backgroundColor: '#FFFFFF',
